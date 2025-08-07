@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JavaScript Data Types</title>
+</head>
+<body>
+
+  <h2>JavaScript Data Types Example</h2>
+  <p id="output"></p>
+
+  <script>
+   
+    let name = "Kingslin";           
+    let age = 24;                  
+    let isStudent = true;         
+    let marks = [85, 90, 78];    
+    let person = {                
+      firstName: "Kingslin",
+      lastName: "robin"
+    };
+    let emptyValue = null;        
+    let notDefined;               
+
+    let message = 
+      "String: " + name + "<br>" +
+      "Number: " + age + "<br>" +
+      "Boolean: " + isStudent + "<br>" +
+      "Array: " + marks + "<br>" +
+      "Object: " + person.firstName + " " + person.lastName + "<br>" +
+      "Null: " + emptyValue + "<br>" +
+      "Undefined: " + notDefined;
+
+    document.getElementById("output").innerHTML = message;
+  </script>
+
+</body>
+</html>
+

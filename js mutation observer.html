@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="box">Hello</div>
+
+<script>
+  var target = document.getElementById("box");
+
+  var observer = new MutationObserver(function(mutations) {
+    console.log("Something changed in #box!");
+  });
+
+  observer.observe(target, {
+    childList: true
+  });
+
+  
+  setTimeout(function() {
+    target.textContent = "Changed!";
+  }, 2000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Simple Promise Example</h2>
+<button onclick="checkNumber()">Check Number</button>
+
+<script>
+  function isEven(number) {
+    return new Promise(function(resolve, reject) {
+      if (number % 2 === 0) {
+        resolve("The number is even.");
+      } else {
+        reject("The number is odd.");
+      }
+    });
+  }
+
+  function checkNumber() {
+    var num = 5;
+
+    isEven(num)
+      .then(function(result) {
+        alert("Success: " + result);
+      })
+      .catch(function(error) {
+        alert("Error: " + error);
+      });
+  }
+</script>
+
+</body>
+</html>
