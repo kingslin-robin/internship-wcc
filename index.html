@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRUD Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #E6E6FA; /* Soft lavender background */
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        li {
+            background: white;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        li button {
+            background-color: #2196F3;
+        }
+        li button:last-child {
+            background-color: #f44336;
+        }
+        li span {
+            flex: 1;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Management</h1>
+
+    <form id="userForm">
+        <input type="hidden" id="userId">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="number" id="age" placeholder="Age" required>
+        <input type="text" id="phone" placeholder="Phone" required>
+        <button type="submit">Save</button>
+    </form>
+
+    <h2>User List</h2>
+    <ul id="userList"></ul>
+
+    <script>
+        const form = document.getElementById('userForm');
+        const userList = document.getElementById('userList');
+
+        async function loadUsers() {
+            const res = await fetch('/list');
+            const users = await res.json();
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                const info = document.createElement('span');
+                info.textContent = `${user.name} (${user.email}) - ${user.age} years old, ${user.phone}`;
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'Edit';
+                editBtn.onclick = () => editUser(user);
+                const delBtn = document.createElement('button');
+                delBtn.textContent = 'Delete';
+                delBtn.onclick = () => deleteUser(user.id);
+                li.appendChild(info);
+                li.appendChild(editBtn);
+                li.appendChild(delBtn);
+                userList.appendChild(li);
+            });
+        }
+
+        async function deleteUser(id) {
+            await fetch(`/delete/${id}`, { method: 'DELETE' });
+            loadUsers();
+        }
+
+        function editUser(user) {
+            document.getElementById('userId').value = user.id;
+            document.getElementById('name').value = user.name;
+            document.getElementById('email').value = user.email;
+            document.getElementById('age').value = user.age;
+            document.getElementById('phone').value = user.phone;
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('userId').value;
+            const userData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                age: document.getElementById('age').value,
+                phone: document.getElementById('phone').value
+            };
+
+            if (id) {
+                await fetch(`/edit/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+            } else {
+                await fetch('/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+            }
+
+            form.reset();
+            loadUsers();
+        };
+
+        loadUsers();
+    </script>
+</body>
+</html>
